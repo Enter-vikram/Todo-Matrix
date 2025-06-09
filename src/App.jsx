@@ -101,7 +101,7 @@ export default function App() {
   return (
     <Router>
       <div className={darkMode ? "dark" : ""}>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-100 to-pink-200 dark:from-[#0f172a] dark:to-[#1e293b] text-gray-800 dark:text-gray-100 transition-colors duration-300">
+        <div className="min-h-screen flex flex-col bg-[#F2EFC2] dark:bg-[#0D0D0D] text-gray-800 dark:text-gray-100 transition-colors duration-300">
           <Routes>
             <Route
               path="/"
@@ -133,7 +133,7 @@ export default function App() {
                     <div className="md:hidden mt-4 mb-6">
                       <Link
                         to="/analytics"
-                        className="block text-center w-full py-3 bg-black text-white font-semibold rounded-xl shadow-xl hover:scale-[1.02] transition"
+                        className="block text-center w-full py-3 bg-[#0D0D0D] text-white font-semibold rounded-xl shadow-xl hover:scale-[1.02] transition"
                       >
                         📊 View Analytics
                       </Link>
@@ -167,7 +167,7 @@ export default function App() {
                   <div className="md:hidden mt-6">
                     <Link
                       to="/"
-                      className="block w-full text-center py-2 bg-black text-white rounded-xl shadow hover:scale-[1.02] transition"
+                      className="block w-full text-center py-2 bg-[#0D0D0D] text-white rounded-xl shadow hover:scale-[1.02] transition"
                     >
                       ← Back to Tasks
                     </Link>

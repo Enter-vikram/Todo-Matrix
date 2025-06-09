@@ -2,11 +2,11 @@
 import React from "react";
 import TaskItem from "./TaskItem";
 
-const quadrantTitles = {
-  q1: "Urgent & Important",
-  q2: "Urgent & Not Important",
-  q3: "Not Urgent & Important",
-  q4: "Not Urgent & Not Important",
+const quadrantLabels = {
+  q1: "Do First",
+  q2: "Schedule",
+  q3: "Delegate",
+  q4: "Eliminate",
 };
 
 export default function TaskMatrix({
@@ -15,54 +15,43 @@ export default function TaskMatrix({
   togglePin,
   deleteTask,
   animatingTaskId,
-  search,
 }) {
-  const filteredTasks = tasks.filter((t) =>
-    t.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const grouped = { q1: [], q2: [], q3: [], q4: [] };
 
-  const quadrantTasks = {
-    q1: [],
-    q2: [],
-    q3: [],
-    q4: [],
-  };
-
-  filteredTasks.forEach((task) => {
-    quadrantTasks[task.quadrant].push(task);
+  tasks?.forEach((task) => {
+    const q = task.quadrant;
+    if (!grouped[q]) grouped[q] = [];
+    grouped[q].push(task);
   });
 
-  const sortedTasks = (tasks) =>
-    [...tasks].sort((a, b) => {
-      if (a.pin === b.pin) return a.id < b.id ? 1 : -1;
-      return b.pin - a.pin;
-    });
+  const renderTasks = (quadrant) => {
+    const sorted = [...(grouped[quadrant] || [])].sort((a, b) =>
+      a.pin === b.pin ? 0 : a.pin ? -1 : 1
+    );
+
+    return sorted.map((task) => (
+      <TaskItem
+        key={task.id}
+        task={task}
+        toggleComplete={toggleComplete}
+        togglePin={togglePin}
+        deleteTask={deleteTask}
+        animating={animatingTaskId === task.id}
+      />
+    ));
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      {Object.entries(quadrantTitles).map(([key, title]) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      {["q1", "q2", "q3", "q4"].map((q) => (
         <div
-          key={key}
-          className="bg-white/70 dark:bg-white/10 backdrop-blur-md border border-gray-300 dark:border-gray-700 rounded-xl p-4 shadow-md"
+          key={q}
+          className="bg-white/60 dark:bg-gray-900 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700"
         >
-          <h3 className="text-sm font-semibold mb-3 text-gray-700 dark:text-gray-100">
-            {title}
+          <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">
+            {quadrantLabels[q]}
           </h3>
-          <div className="flex flex-col gap-3">
-            {sortedTasks(quadrantTasks[key]).map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                toggleComplete={toggleComplete}
-                togglePin={togglePin}
-                deleteTask={deleteTask}
-                animating={animatingTaskId === task.id}
-              />
-            ))}
-            {sortedTasks(quadrantTasks[key]).length === 0 && (
-              <p className="text-sm text-gray-400">No tasks</p>
-            )}
-          </div>
+          <div className="space-y-3">{renderTasks(q)}</div>
         </div>
       ))}
     </div>

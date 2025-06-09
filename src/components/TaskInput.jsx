@@ -1,4 +1,3 @@
-// src/components/TaskInput.jsx
 import React from "react";
 import { PlusCircle } from "lucide-react";
 
@@ -12,8 +11,8 @@ export default function TaskInput({ newTask, setNewTask, addTask }) {
   };
 
   return (
-    <div className="mb-6 bg-white/70 dark:bg-white/10 backdrop-blur-md border border-gray-300 dark:border-gray-700 rounded-xl p-4 shadow-sm">
-      <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">
+    <div className="mb-6 bg-[#F2EFC2]/70 dark:bg-[#1a1a1a] backdrop-blur-md border border-[#D9C0BA] dark:border-[#333] rounded-xl p-4 shadow-sm">
+      <h3 className="text-lg font-semibold mb-2 text-[#0D0D0D] dark:text-[#F2EFC2]">
         Add New Task
       </h3>
       <div className="flex flex-col sm:flex-row items-stretch gap-3">
@@ -23,10 +22,10 @@ export default function TaskInput({ newTask, setNewTask, addTask }) {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Enter task title..."
-          className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 dark:focus:ring-pink-600"
+          className="flex-1 px-4 py-2 rounded-lg border border-[#D9C0BA] dark:border-[#555] bg-white dark:bg-[#0D0D0D] text-sm focus:outline-none focus:ring-2 focus:ring-[#1DA1F2]"
         />
         <div className="flex gap-2 items-center justify-between sm:justify-start">
-          <label className="flex items-center gap-1 text-sm">
+          <label className="flex items-center gap-1 text-sm text-[#0D0D0D] dark:text-[#F2EFC2]">
             <input
               type="checkbox"
               checked={newTask.importance}
@@ -36,7 +35,7 @@ export default function TaskInput({ newTask, setNewTask, addTask }) {
             />
             Important
           </label>
-          <label className="flex items-center gap-1 text-sm">
+          <label className="flex items-center gap-1 text-sm text-[#0D0D0D] dark:text-[#F2EFC2]">
             <input
               type="checkbox"
               checked={newTask.urgency}
@@ -49,7 +48,7 @@ export default function TaskInput({ newTask, setNewTask, addTask }) {
         </div>
         <button
           onClick={addTask}
-          className="flex items-center gap-1 px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium transition"
+          className="flex items-center gap-1 px-4 py-2 rounded-lg bg-[#F24E29] hover:bg-[#e44321] text-white text-sm font-medium transition"
         >
           <PlusCircle size={16} />
           Add
