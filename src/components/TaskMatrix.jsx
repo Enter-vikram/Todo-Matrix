@@ -3,10 +3,10 @@ import React from "react";
 import TaskItem from "./TaskItem";
 
 const quadrantLabels = {
-  q1: "Do First",
-  q2: "Schedule",
-  q3: "Delegate",
-  q4: "Eliminate",
+  q1: "Important & Urgent",
+  q2: "Not Important but Urgent",
+  q3: "Important but Not Urgent",
+  q4: "Not Important & Not Urgent",
 };
 
 export default function TaskMatrix({

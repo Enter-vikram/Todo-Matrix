@@ -1,8 +1,11 @@
-// src/components/Header.jsx
 import React from "react";
 import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
-export default function Header({ darkMode, setDarkMode, search, setSearch }) {
+export default function Header({ search, setSearch }) {
+  const { theme, toggleTheme } = useTheme();
+  const isDarkMode = theme === "dark";
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur bg-[#F2EFC2]/70 dark:bg-[#0D0D0D]/70 text-[#0D0D0D] dark:text-white shadow-md">
       <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -20,10 +23,10 @@ export default function Header({ darkMode, setDarkMode, search, setSearch }) {
           />
 
           <button
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={toggleTheme}
             className="rounded-full p-2 border-2 border-[#F24E29] text-[#F24E29] dark:border-[#F2EFC2] dark:text-[#F2EFC2] hover:scale-105 transition"
           >
-            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         </div>
       </div>

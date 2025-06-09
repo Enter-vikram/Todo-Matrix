@@ -1,6 +1,5 @@
-// src/App.jsx
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Header from "./components/Header";
 import TaskInput from "./components/TaskInput";
 import TaskMatrix from "./components/TaskMatrix";
@@ -36,10 +35,11 @@ export default function App() {
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((t) => t.done).length;
   const quadrantCounts = {
-    q1: tasks.filter((t) => t.quadrant === "q1").length,
-    q2: tasks.filter((t) => t.quadrant === "q2").length,
-    q3: tasks.filter((t) => t.quadrant === "q3").length,
-    q4: tasks.filter((t) => t.quadrant === "q4").length,
+    "Important & Urgent": tasks.filter((t) => t.quadrant === "q1").length,
+    "Not Important but Urgent": tasks.filter((t) => t.quadrant === "q2").length,
+    "Important but Not Urgent": tasks.filter((t) => t.quadrant === "q3").length,
+    "Neither Important nor Urgent": tasks.filter((t) => t.quadrant === "q4")
+      .length,
   };
 
   function getQuadrant(importance, urgency) {
@@ -51,7 +51,6 @@ export default function App() {
 
   function addTask() {
     if (!newTask.title.trim()) return;
-
     const now = new Date();
     const task = {
       id: Date.now(),
@@ -67,7 +66,6 @@ export default function App() {
       reminder: null,
       reminderShown: false,
     };
-
     setTasks([task, ...tasks]);
     setNewTask({ title: "", importance: true, urgency: true });
   }
@@ -98,86 +96,99 @@ export default function App() {
     time: `${t.date} ${t.time}`,
   }));
 
+  const quadrantLabels = {
+    q1: "Important & Urgent",
+    q2: "Not Important but Urgent",
+    q3: "Important but Not Urgent",
+    q4: "Neither Important nor Urgent",
+  };
+
   return (
-    <Router>
-      <div className={darkMode ? "dark" : ""}>
-        <div className="min-h-screen flex flex-col bg-[#F2EFC2] dark:bg-[#0D0D0D] text-gray-800 dark:text-gray-100 transition-colors duration-300">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Header
-                    darkMode={darkMode}
-                    setDarkMode={setDarkMode}
-                    search={search}
-                    setSearch={setSearch}
+    <div className={darkMode ? "dark" : ""}>
+      <div className="min-h-screen flex flex-col bg-[#F2EFC2] dark:bg-[#0D0D0D] text-gray-800 dark:text-gray-100 transition-colors duration-300">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header
+                  darkMode={darkMode}
+                  setDarkMode={setDarkMode}
+                  search={search}
+                  setSearch={setSearch}
+                />
+
+                <main className="flex-1 flex flex-col px-4 max-w-3xl w-full mx-auto">
+                  <TaskInput
+                    newTask={newTask}
+                    setNewTask={setNewTask}
+                    addTask={addTask}
                   />
 
-                  <main className="flex-1 flex flex-col px-4 max-w-3xl w-full mx-auto">
-                    <TaskInput
-                      newTask={newTask}
-                      setNewTask={setNewTask}
-                      addTask={addTask}
-                    />
-
-                    <TaskMatrix
-                      tasks={filteredTasks}
-                      toggleComplete={toggleComplete}
-                      togglePin={togglePin}
-                      deleteTask={deleteTask}
-                      animatingTaskId={animatingTaskId}
-                      search={search}
-                    />
-
-                    <div className="md:hidden mt-4 mb-6">
-                      <Link
-                        to="/analytics"
-                        className="block text-center w-full py-3 bg-[#0D0D0D] text-white font-semibold rounded-xl shadow-xl hover:scale-[1.02] transition"
-                      >
-                        📊 View Analytics
-                      </Link>
-                    </div>
-
-                    <div className="hidden md:block mt-4 pb-32">
-                      <Analytics
-                        total={totalTasks}
-                        completed={completedTasks}
-                        quadrants={quadrantCounts}
-                        tasks={tasks}
-                        activityLog={activityLog}
-                      />
-                    </div>
-                  </main>
-                </>
-              }
-            />
-
-            <Route
-              path="/analytics"
-              element={
-                <main className="px-4 max-w-3xl w-full mx-auto pt-4">
-                  <Analytics
-                    total={totalTasks}
-                    completed={completedTasks}
-                    quadrants={quadrantCounts}
-                    tasks={tasks}
-                    activityLog={activityLog}
+                  <TaskMatrix
+                    tasks={filteredTasks}
+                    toggleComplete={toggleComplete}
+                    togglePin={togglePin}
+                    deleteTask={deleteTask}
+                    animatingTaskId={animatingTaskId}
+                    quadrantLabels={quadrantLabels}
                   />
-                  <div className="md:hidden mt-6">
+
+                  {/* Mobile View Analytics Button */}
+                  <div className="md:hidden mt-4 mb-6">
                     <Link
-                      to="/"
-                      className="block w-full text-center py-2 bg-[#0D0D0D] text-white rounded-xl shadow hover:scale-[1.02] transition"
+                      to="/analytics"
+                      className="block text-center w-full py-3 px-6 rounded-xl shadow-xl font-semibold transition hover:scale-[1.02] 
+                        border-2 border-[#0D0D0D] dark:border-[#F24E29] 
+                        text-[#0D0D0D] dark:text-[#F24E29] 
+                        bg-[#F2EFC2] dark:bg-[#0D0D0D]"
                     >
-                      ← Back to Tasks
+                      📊 View Analytics
                     </Link>
                   </div>
+
+                  {/* Desktop Analytics Section */}
+                  <div className="hidden md:block mt-4 pb-32">
+                    <Analytics
+                      total={totalTasks}
+                      completed={completedTasks}
+                      quadrants={quadrantCounts}
+                      tasks={tasks}
+                      activityLog={activityLog}
+                    />
+                  </div>
                 </main>
-              }
-            />
-          </Routes>
-        </div>
+              </>
+            }
+          />
+
+          <Route
+            path="/analytics"
+            element={
+              <main className="px-4 max-w-3xl w-full mx-auto pt-4">
+                <Analytics
+                  total={totalTasks}
+                  completed={completedTasks}
+                  quadrants={quadrantCounts}
+                  tasks={tasks}
+                  activityLog={activityLog}
+                />
+                <div className="md:hidden mt-6">
+                  <Link
+                    to="/"
+                    className="block w-full text-center py-3 px-6 rounded-xl shadow-xl font-semibold transition hover:scale-[1.02] 
+                      border-2 border-[#0D0D0D] dark:border-[#F24E29] 
+                      text-[#0D0D0D] dark:text-[#F24E29] 
+                      bg-[#F2EFC2] dark:bg-[#0D0D0D]"
+                  >
+                    ← Back to Tasks
+                  </Link>
+                </div>
+              </main>
+            }
+          />
+        </Routes>
       </div>
-    </Router>
+    </div>
   );
 }

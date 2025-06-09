@@ -1,119 +1,177 @@
-// src/components/Analytics.jsx
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useTheme } from "../context/ThemeContext";
 
-const COLORS = ["#1DA1F2", "#F24E29", "#D9C0BA", "#0D0D0D"];
+export default function Analytics({
+  total,
+  completed,
+  quadrants,
+  tasks,
+  activityLog,
+}) {
+  const { isDarkMode } = useTheme();
 
-export default function Analytics({ total, completed, tasks, activityLog }) {
-  const completionRate =
-    total === 0 ? 0 : Math.round((completed / total) * 100);
+  const pinnedTasks = tasks.filter((t) => t.pin).length;
+  const completionRate = total ? Math.round((completed / total) * 100) : 0;
 
   const pieData = [
     { name: "Completed", value: completed },
-    { name: "Remaining", value: total - completed },
+    { name: "Pending", value: total - completed },
   ];
 
+  const COLORS = ["#1DA1F2", "#F24E29"];
+
+  const formatDate = (dateStr) =>
+    new Date(dateStr)
+      .toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .replace(",", " •");
+
   return (
-    <section className="mt-6">
-      <h2 className="text-lg font-semibold mb-4 text-[#0D0D0D] dark:text-[#F2EFC2]">
+    <div className="mt-8 space-y-6">
+      <h2 className="text-lg font-semibold text-sky-500 dark:text-sky-400">
         📊 Analytics Dashboard
       </h2>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#0D0D0D] shadow-xl rounded-xl p-4 flex flex-col items-center">
-          <h3 className="text-sm text-[#1DA1F2] font-semibold">Total Tasks</h3>
-          <p className="text-2xl font-bold text-[#0D0D0D] dark:text-[#F2EFC2]">
+      {/* KPI Section */}
+      <div className="flex flex-wrap gap-4">
+        <div className="flex-1 p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+          <p className="text-muted-foreground text-sm mb-1">Total Tasks</p>
+          <p className="text-lg font-bold text-sky-600 dark:text-sky-400">
             {total}
           </p>
         </div>
-
-        <div className="bg-white dark:bg-[#0D0D0D] shadow-xl rounded-xl p-4 flex flex-col items-center">
-          <h3 className="text-sm text-[#F24E29] font-semibold">Completed</h3>
-          <p className="text-2xl font-bold text-[#0D0D0D] dark:text-[#F2EFC2]">
+        <div className="flex-1 p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+          <p className="text-muted-foreground text-sm mb-1">Completed</p>
+          <p className="text-lg font-bold text-green-600 dark:text-green-400">
             {completed}
           </p>
         </div>
-
-        <div className="bg-white dark:bg-[#0D0D0D] shadow-xl rounded-xl p-4 flex flex-col items-center">
-          <h3 className="text-sm text-[#D9C0BA] font-semibold">
-            Completion Rate
-          </h3>
-          <div className="w-full h-3 bg-gray-200 rounded-full mt-2">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${completionRate}%`,
-                backgroundColor: "#1DA1F2",
-              }}
-            ></div>
-          </div>
-          <p className="mt-1 text-xs text-gray-500">{completionRate}%</p>
+        <div className="flex-1 p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+          <p className="text-muted-foreground text-sm mb-1">Pinned</p>
+          <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
+            {pinnedTasks}
+          </p>
+        </div>
+        <div className="flex-1 p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+          <p className="text-muted-foreground text-sm mb-1">Progress</p>
+          <p className="text-lg font-bold text-rose-600 dark:text-rose-400">
+            {completionRate}%
+          </p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mt-4">
-        {/* Pie Chart */}
-        <div className="bg-white dark:bg-[#0D0D0D] shadow-xl rounded-xl p-4">
-          <h4 className="text-sm font-semibold mb-2 text-[#1DA1F2]">
-            Quadrant Distribution
-          </h4>
-          <ResponsiveContainer width="100%" height={180}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={60}
-                fill="#8884d8"
-                label
+      {/* Pie Chart */}
+      <div className="p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+        <p className="text-muted-foreground text-sm mb-2 font-medium">
+          Completion Ratio
+        </p>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              outerRadius={60}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {pieData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+          {completionRate}% done
+        </p>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="p-4 rounded-xl shadow bg-white dark:bg-zinc-900">
+        <p className="text-muted-foreground text-sm font-medium mb-3">
+          🕓 Recent Activity
+        </p>
+        <ul className="space-y-2 text-sm">
+          {activityLog.length ? (
+            activityLog.slice(0, 5).map((act, i) => (
+              <li
+                key={i}
+                className="flex justify-between items-center text-gray-800 dark:text-gray-200"
               >
-                {pieData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-white dark:bg-[#0D0D0D] shadow-xl rounded-xl p-4">
-          <h4 className="text-sm font-semibold mb-2 text-[#F24E29]">
-            Recent Activity
-          </h4>
-          <ul className="text-sm space-y-1">
-            {activityLog.length === 0 ? (
-              <li className="text-gray-400">No recent activity</li>
-            ) : (
-              activityLog.map((log, index) => (
-                <li key={index} className="flex justify-between">
-                  <span
-                    className={`${
-                      log.type === "Completed"
-                        ? "text-green-500"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {log.type}:
-                  </span>
-                  <span className="truncate">{log.task}</span>
-                  <span className="text-gray-400 text-xs">{log.time}</span>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
+                <span className="font-medium truncate max-w-[70%]">
+                  {act.type}: {act.task}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                  {formatDate(act.time)}
+                </span>
+              </li>
+            ))
+          ) : (
+            <li className="text-gray-400">No recent activity</li>
+          )}
+        </ul>
       </div>
-    </section>
+
+      {/* Task Table */}
+      <div className="overflow-x-auto rounded-xl shadow bg-white dark:bg-zinc-900">
+        <table className="min-w-full text-sm text-left">
+          <thead className="text-sm text-gray-700 bg-gray-100 dark:bg-zinc-800 dark:text-gray-300">
+            <tr>
+              <th className="px-4 py-2">Task</th>
+              <th className="px-4 py-2">Quadrant</th>
+              <th className="px-4 py-2">Created At</th>
+              <th className="px-4 py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks.length ? (
+              tasks.map((task, i) => (
+                <tr key={i} className="border-b dark:border-zinc-800">
+                  <td className="px-4 py-2 font-medium text-gray-800 dark:text-gray-100">
+                    {task.title}
+                  </td>
+                  <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                    {task.quadrant}
+                  </td>
+                  <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                    {formatDate(task.createdAt)}
+                  </td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        task.done
+                          ? "bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200"
+                          : "bg-rose-200 text-rose-800 dark:bg-rose-700 dark:text-rose-200"
+                      }`}
+                    >
+                      {task.done ? "Done" : "Pending"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="px-4 py-4 text-center text-gray-400 dark:text-gray-500"
+                >
+                  No tasks yet
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
