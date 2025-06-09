@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gradient-to-br from-yellow-100 to-pink-200 text-black dark:from-gray-900 dark:to-gray-800 dark:text-white font-sans;
+}
+
+.task-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+.task-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms, transform 200ms;
+}
+.task-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.task-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms, transform 200ms;
+}
