@@ -1,6 +1,7 @@
 import React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import Logo from "./Logo"; // ✅ import your logo
 
 export default function Header({ search, setSearch }) {
   const { theme, toggleTheme } = useTheme();
@@ -9,10 +10,15 @@ export default function Header({ search, setSearch }) {
   return (
     <header className="sticky top-0 z-50 backdrop-blur bg-[#F2EFC2]/70 dark:bg-[#0D0D0D]/70 text-[#0D0D0D] dark:text-white shadow-md">
       <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight text-[#1DA1F2] dark:text-[#F2EFC2]">
-          To-do
-        </h1>
+        {/* App Logo + Title */}
+        <div className="flex items-center gap-2">
+          <Logo size={24} /> {/* 🔥 Logo next to title */}
+          <h1 className="text-2xl font-bold tracking-tight text-[#1DA1F2] dark:text-[#F2EFC2]">
+            To-do
+          </h1>
+        </div>
 
+        {/* Search + Theme Toggle */}
         <div className="flex items-center gap-3">
           <input
             type="text"
