@@ -1,23 +1,62 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+  <!DOCTYPE html>
+  <html lang="en" class="scroll-smooth">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>To-Do</title>
-  
-<!-- Favicon and App Icons -->
-<link rel="icon" href="/favicon.ico" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" content="#F24E29" />
+  <head>
+    <!-- Charset & Viewport -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" 
+    />
+    
+    <link rel="manifest" href="/manifest.webmanifest" />
 
-</head>
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+    <!-- Title -->
+    <title>To-Do</title>
 
-</html>
+    <!-- Text Size Adjust Fix -->
+    <style>
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    </style>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A beautiful Eisenhower Matrix-based task manager." />
+    <meta name="keywords" content="todo, task manager, Eisenhower matrix, productivity, PWA, planner, GTD" />
+    <meta name="author" content="Your Name or Team" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="To-Do App" />
+    <meta property="og:description" content="Organize tasks using the Eisenhower Matrix." />
+    <meta property="og:image" content="./web-app-manifest-512x512.png" />
+    <meta property="og:url" content="https://yourdomain.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="To-Do App" />
+    <meta name="twitter:description" content="Plan and prioritize your day with the Eisenhower Matrix." />
+    <meta name="twitter:image" content="./web-app-manifest-512x512.png" />
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <!-- Theme Color (for mobile browser styling) -->
+    <meta name="theme-color" content="#F24E29" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="To-Do" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.jsx"></script>
+  </body>
+
+  </html>

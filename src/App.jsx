@@ -18,6 +18,16 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [animatingTaskId, setAnimatingTaskId] = useState(null);
 
+  // Clean malformed tasks
+  useEffect(() => {
+    const cleaned = tasks.filter((t) => typeof t?.title === "string");
+    if (cleaned.length !== tasks.length) {
+      console.warn("Removed malformed tasks from localStorage");
+      setTasks(cleaned);
+    }
+  }, []);
+
+  // Reminders
   useEffect(() => {
     tasks.forEach((task) => {
       if (task.reminder && !task.reminderShown) {
@@ -59,7 +69,7 @@ export default function App() {
       urgency: newTask.urgency,
       done: false,
       pin: false,
-      createdAt: now.toISOString(),
+      createdAt: now.toISOString(), // 👈 Correct ISO format
       date: now.toLocaleDateString(),
       time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       quadrant: getQuadrant(newTask.importance, newTask.urgency),
@@ -86,14 +96,16 @@ export default function App() {
     setTasks(tasks.map((t) => (t.id === id ? { ...t, pin: !t.pin } : t)));
   }
 
-  const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(search.toLowerCase())
+  const filteredTasks = tasks.filter(
+    (task) =>
+      typeof task?.title === "string" &&
+      task.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const activityLog = tasks.slice(0, 5).map((t) => ({
     type: t.done ? "Completed" : "Added",
     task: t.title,
-    time: `${t.date} ${t.time}`,
+    time: t.createdAt, // 👈 Correct ISO timestamp
   }));
 
   const quadrantLabels = {
@@ -134,7 +146,7 @@ export default function App() {
                     quadrantLabels={quadrantLabels}
                   />
 
-                  {/* Mobile View Analytics Button */}
+                  {/* Mobile Analytics Link */}
                   <div className="md:hidden mt-4 mb-6">
                     <Link
                       to="/analytics"
